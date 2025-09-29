@@ -53,7 +53,7 @@ It allows users to perform full CRUD operations on both projects and tasks. Auth
 
 - Installation prerequisites - MongoDB Atlas or MongoDb server
 
-*Installation
+-Installation
   - cd into project_mgmt_backend directory directory and run `npm install` to install module and dependencies
   - database setup is included in .env file with values for DB_URI, JWT_SECRET , PORT
   - .env file is included in project for ease of setup 
