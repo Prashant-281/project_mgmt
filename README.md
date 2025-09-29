@@ -22,7 +22,7 @@ It allows users to perform full CRUD operations on both projects and tasks. Auth
      * JWT Authentication
      * React Hook Form + Yup (for form validation)
     
-📦 Installation - cd in frontend_next directory and run `npx create-next-app@latest my-next-app` to install latest next
+📦 Installation - cd in project_mgmt_frontend directory and run `npm install` to install node modules and dependencies
                 - Axios is required and already configured with a base URL in api.ts.
                 -to install required node modules run `npm install`
 
@@ -54,7 +54,7 @@ It allows users to perform full CRUD operations on both projects and tasks. Auth
 
 - Installation prerequisites - MongoDB Atlas or MongoDb server
 
-- Installation - cd into backend directory and run `npm install express` to install express js
+- Installation - cd into project_mgmt_backend directory and run `npm install` to install node modules and dependencies
                - database setup is included in .env file with values for DB_URI, JWT_SECRET , PORT
                - .env file is included in project for ease of setup 
 
