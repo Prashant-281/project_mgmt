@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { loginUser } from "@/lib/api";
 import { LoginFormInputs } from "@/types";
 import { toast } from "react-toastify";
+import { CircularProgress } from "@mui/material";
 
 const schema = yup.object().shape({
   email: yup.string().email("Invalid email format").required("Email is required"),
@@ -19,17 +20,17 @@ export default function LoginForm() {
   });
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
   const onSubmit = async (data: LoginFormInputs) => {
     try {
+      setLoading(true)
       const response = await loginUser(data.email, data.password);
        localStorage.setItem("token", response.token);
        const { name, email } = response.user;
        localStorage.setItem("user", JSON.stringify({ name, email }));
-       toast.info('Redirecting...' ,{autoClose:1000})
        router.push("/dashboard");
-       toast.success(`Welcome back ${name}`, {autoClose:1000})
     } catch (error) {
     if (error instanceof Error) {
       setErrorMessage(error.message);
@@ -37,6 +38,9 @@ export default function LoginForm() {
     } else {
       setErrorMessage("Something went wrong");
     }
+  }
+  finally {
+    setLoading(false);
   }
   };
 
@@ -82,7 +86,7 @@ export default function LoginForm() {
             type="submit"
             className="w-full p-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 mt-4"
           >
-            Login
+           {loading?<CircularProgress color="secondary" size={24}/>:'Login'}
           </button>
 
           <div className="mt-4 text-center">

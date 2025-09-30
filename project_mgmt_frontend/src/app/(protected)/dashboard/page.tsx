@@ -23,7 +23,8 @@ import {
   DialogTitle,
   Grid,
   IconButton,
-  Menu, MenuItem,
+  Menu,
+  MenuItem,
   TextField,
   Tooltip,
   Typography,
@@ -39,6 +40,7 @@ import {
   MdOutlineLibraryAdd,
   MdVisibility,
 } from "react-icons/md";
+import { TbLogout2 } from "react-icons/tb";
 import { toast } from "react-toastify";
 import * as yup from "yup";
 
@@ -47,14 +49,20 @@ type ProjectFormData = {
   description: string;
 };
 
-const projectSchema = yup.object({
-  title: yup.string().trim()
-    .required("Project title is required")
-    .max(50, "Title cannot exceed 50 characters"),
-  description: yup.string().trim()
-    .required("Project description is required")
-    .max(100, "Description cannot exceed 100 characters"),
-}).required();
+const projectSchema = yup
+  .object({
+    title: yup
+      .string()
+      .trim()
+      .required("Project title is required")
+      .max(50, "Title cannot exceed 50 characters"),
+    description: yup
+      .string()
+      .trim()
+      .required("Project description is required")
+      .max(100, "Description cannot exceed 100 characters"),
+  })
+  .required();
 
 const getStatusColor = (status: string) => {
   switch ((status || "").toLowerCase()) {
@@ -84,11 +92,11 @@ const Dashboard = () => {
   const [user, setUser] = useState<StoredUser | null>(null);
   useAuth(true);
 
-    const {
+  const {
     control,
     handleSubmit,
-    reset, 
-    formState: { errors }, 
+    reset,
+    formState: { errors },
   } = useForm<ProjectFormData>({
     resolver: yupResolver(projectSchema),
     mode: "onChange",
@@ -98,14 +106,17 @@ const Dashboard = () => {
     },
   });
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
         const response = await fetchProjects();
         setProjects(response?.data);
-        toast.success(response?.status)
+        toast.success(response?.message);
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+          setUser(JSON.parse(storedUser));
+        }
       } catch (err) {
         if (err instanceof Error) setError(err.message);
         else setError("An unknown error occurred.");
@@ -117,12 +128,6 @@ const Dashboard = () => {
     fetchData();
   }, []);
 
- useEffect(() => {
-  const storedUser = localStorage.getItem("user");
-  if (storedUser) {
-    setUser(JSON.parse(storedUser));
-  }
-}, []);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -133,7 +138,7 @@ const Dashboard = () => {
   };
   const handleOpenCreate = () => {
     setIsEditing(false);
-     reset({ title: "", description: "" });
+    reset({ title: "", description: "" });
     setCurrentProject(null);
     setOpen(true);
   };
@@ -141,14 +146,14 @@ const Dashboard = () => {
   const handleOpenEdit = (project: Project) => {
     setIsEditing(true);
     setCurrentProject(project);
-     reset({ title: project.title, description: project.description });;
+    reset({ title: project.title, description: project.description });
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
     setIsEditing(false);
-    reset()
+    reset();
   };
 
   const handleLogoutClose = () => {
@@ -162,21 +167,24 @@ const Dashboard = () => {
     setDeleteOpen(false);
     setCurrentProject(null);
   };
-
-  const handleNavigate = (projectId: string)=>{
-     toast.info("Redirecting...",{autoClose: 1000});
-     router.push(`/project/${projectId}`);
-  }
+  const handleConfirmLogout= () => {
+    setLogoutOpen(false);
+    logoutUser()
+  }  
+  const handleNavigate = (projectId: string) => {
+    toast.info("Redirecting...", { autoClose: 1000 });
+    router.push(`/project/${projectId}`);
+  };
 
   const onSubmit = async (data: ProjectFormData) => {
     try {
       if (isEditing) {
         if (!currentProject) return;
-       const res = await updateProject(currentProject._id, data);
+        const res = await updateProject(currentProject._id, data);
         toast.success(res?.status);
       } else {
         const res = await createProject(data);
-        toast.success(res?.status)
+        toast.success(res?.status);
       }
       const response = await fetchProjects();
       setProjects(response?.data);
@@ -190,8 +198,8 @@ const Dashboard = () => {
   const handleDeleteSubmit = async () => {
     try {
       if (!currentProject) return;
-     const res =  await deleteProject(currentProject._id);
-     toast.success(res?.message);
+      const res = await deleteProject(currentProject._id);
+      toast.success(res?.message);
       const response = await fetchProjects();
       setProjects(response?.data);
       handleCloseDelete();
@@ -250,7 +258,7 @@ const Dashboard = () => {
           >
             {isMobile ? "New Project" : "Create New Project"}
           </Button>
-          
+
           <Tooltip title="Account Info">
             <IconButton onClick={handleMenuOpen}>
               <Avatar
@@ -286,10 +294,10 @@ const Dashboard = () => {
             <MenuItem
               onClick={() => {
                 handleMenuClose();
-                setLogoutOpen(true); 
+                setLogoutOpen(true);
               }}
             >
-              Logout
+              <TbLogout2 style={{marginRight:4, color:'darkred'}}/>Logout
             </MenuItem>
           </Menu>
         </Box>
@@ -316,7 +324,7 @@ const Dashboard = () => {
             Error: {error}
           </Typography>
         ) : projects.length > 0 ? (
-          <Grid  container spacing={isMobile ? 2 : 4}>
+          <Grid container spacing={isMobile ? 2 : 4}>
             {projects.map((project: Project) => (
               <Grid key={project._id}>
                 <Card
@@ -353,22 +361,24 @@ const Dashboard = () => {
                     >
                       {project.title}
                     </Typography>
-                   {project?.createdAt && (
+                    {project?.createdAt && (
                       <Typography
                         variant="caption"
                         color="text.primary"
                         sx={{ display: "block", mt: 1, fontWeight: "bold" }}
                       >
-                        Created: {new Date(project?.createdAt).toLocaleDateString()}
+                        Created:{" "}
+                        {new Date(project?.createdAt).toLocaleDateString()}
                       </Typography>
                     )}
-                   {project?.updatedAt && (
+                    {project?.updatedAt && (
                       <Typography
                         variant="caption"
                         color="text.primary"
                         sx={{ display: "block", fontWeight: "bold" }}
                       >
-                        Updated: {new Date(project?.updatedAt).toLocaleDateString()}
+                        Updated:{" "}
+                        {new Date(project?.updatedAt).toLocaleDateString()}
                       </Typography>
                     )}
                     <Typography
@@ -405,7 +415,7 @@ const Dashboard = () => {
                       color="primary"
                       size="small"
                       startIcon={<MdVisibility />}
-                      onClick={() =>handleNavigate(project._id)}
+                      onClick={() => handleNavigate(project._id)}
                       sx={{ textTransform: "none", minWidth: 120 }}
                     >
                       View Tasks
@@ -477,7 +487,6 @@ const Dashboard = () => {
         </DialogTitle>
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogContent sx={{ bgcolor: theme.palette.grey[100], p: 3 }}>
-          
             <Controller
               name="title"
               control={control}
@@ -488,15 +497,13 @@ const Dashboard = () => {
                   label="Project Title"
                   variant="outlined"
                   fullWidth
-                 
                   error={!!errors.title}
-                  helperText={errors.title?.message || ' '}
+                  helperText={errors.title?.message || " "}
                   sx={{ mt: 1, mb: 2 }}
                 />
               )}
             />
 
-          
             <Controller
               name="description"
               control={control}
@@ -509,20 +516,20 @@ const Dashboard = () => {
                   multiline
                   rows={4}
                   error={!!errors.description}
-                  helperText={errors.description?.message || ' '}
+                  helperText={errors.description?.message || " "}
                   sx={{ mb: 2 }}
                 />
               )}
             />
           </DialogContent>
-        <DialogActions sx={{ p: 2 }}>
-          <Button onClick={handleClose} color="inherit">
-            Cancel
-          </Button>
-          <Button type="submit" variant="contained" color="primary">
-            {isEditing ? "Save Changes" : "Create Project"}
-          </Button>
-        </DialogActions>
+          <DialogActions sx={{ p: 2 }}>
+            <Button onClick={handleClose} color="inherit">
+              Cancel
+            </Button>
+            <Button type="submit" variant="contained" color="primary">
+              {isEditing ? "Save Changes" : "Create Project"}
+            </Button>
+          </DialogActions>
         </form>
       </Dialog>
 
@@ -591,7 +598,7 @@ const Dashboard = () => {
           <Button onClick={handleLogoutClose} color="inherit">
             Cancel
           </Button>
-          <Button color="error" variant="contained" onClick={logoutUser}>
+          <Button color="error" variant="contained" onClick={handleConfirmLogout}>
             Yes
           </Button>
         </DialogActions>

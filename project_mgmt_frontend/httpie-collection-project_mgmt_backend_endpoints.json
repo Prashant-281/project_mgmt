@@ -1,0 +1,375 @@
+{
+  "meta": {
+    "format": "httpie",
+    "version": "1.0.0",
+    "contentType": "collection",
+    "schema": "https://schema.httpie.io/1.0.0.json",
+    "docs": "https://httpie.io/r/help/export-from-httpie",
+    "source": "HTTPie Desktop 2025.2.0"
+  },
+  "entry": {
+    "name": "Project_mgmt_backend_endpoints",
+    "icon": {
+      "name": "default",
+      "color": "gray"
+    },
+    "auth": {
+      "type": "none"
+    },
+    "requests": [
+      {
+        "name": "",
+        "url": "localhost:5500/api/v1/auth/login",
+        "method": "POST",
+        "headers": [],
+        "queryParams": [],
+        "pathParams": [],
+        "auth": {
+          "type": "inherited"
+        },
+        "body": {
+          "type": "text",
+          "file": {
+            "name": ""
+          },
+          "text": {
+            "value": "{\n  \"email\":\"prash@example.com\",\n  \"password\":\"12345abc\"\n}",
+            "format": "application/json"
+          },
+          "form": {
+            "isMultipart": false,
+            "fields": []
+          },
+          "graphql": {
+            "query": "",
+            "variables": ""
+          }
+        }
+      },
+      {
+        "name": "",
+        "url": "localhost:5500/api/v1/projects",
+        "method": "GET",
+        "headers": [],
+        "queryParams": [],
+        "pathParams": [],
+        "auth": {
+          "type": "bearer",
+          "credentials": {
+            "username": "",
+            "password": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGQ0YTQ3NzVjZTY3N2Y1NGExNDI5MzEiLCJpYXQiOjE3NTkxOTkwNTYsImV4cCI6MTc1OTI4NTQ1Nn0.tjoq30rFCBfKuZQRHweaGCQjunLWDQaQROLDdeOZKh8"
+          },
+          "target": "headers"
+        },
+        "body": {
+          "type": "none",
+          "file": {
+            "name": ""
+          },
+          "text": {
+            "value": "",
+            "format": "application/json"
+          },
+          "form": {
+            "isMultipart": false,
+            "fields": []
+          },
+          "graphql": {
+            "query": "",
+            "variables": ""
+          }
+        }
+      },
+      {
+        "name": "",
+        "url": "localhost:5500/api/v1/projects/68d92404b719f26c6b62efde",
+        "method": "PUT",
+        "headers": [],
+        "queryParams": [],
+        "pathParams": [],
+        "auth": {
+          "type": "bearer",
+          "credentials": {
+            "username": "",
+            "password": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGQ0YTQ3NzVjZTY3N2Y1NGExNDI5MzEiLCJpYXQiOjE3NTkxOTkwNTYsImV4cCI6MTc1OTI4NTQ1Nn0.tjoq30rFCBfKuZQRHweaGCQjunLWDQaQROLDdeOZKh8"
+          },
+          "target": "headers"
+        },
+        "body": {
+          "type": "text",
+          "file": {
+            "name": ""
+          },
+          "text": {
+            "value": "{\n  \"title\":\"Test new updated\",\n  \"description\":\"Test new updated\"\n}",
+            "format": "application/json"
+          },
+          "form": {
+            "isMultipart": false,
+            "fields": []
+          },
+          "graphql": {
+            "query": "",
+            "variables": ""
+          }
+        }
+      },
+      {
+        "name": "",
+        "url": "localhost:5500/api/v1/projects/68d92404b719f26c6b62efde",
+        "method": "DELETE",
+        "headers": [],
+        "queryParams": [],
+        "pathParams": [],
+        "auth": {
+          "type": "bearer",
+          "credentials": {
+            "username": "",
+            "password": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGQ0YTQ3NzVjZTY3N2Y1NGExNDI5MzEiLCJpYXQiOjE3NTkxOTkwNTYsImV4cCI6MTc1OTI4NTQ1Nn0.tjoq30rFCBfKuZQRHweaGCQjunLWDQaQROLDdeOZKh8"
+          },
+          "target": "headers"
+        },
+        "body": {
+          "type": "none",
+          "file": {
+            "name": ""
+          },
+          "text": {
+            "value": "",
+            "format": "application/json"
+          },
+          "form": {
+            "isMultipart": false,
+            "fields": []
+          },
+          "graphql": {
+            "query": "",
+            "variables": ""
+          }
+        }
+      },
+      {
+        "name": "",
+        "url": "localhost:5500/api/v1/projects/68d5efbd0225b829ec9a07cb/tasks",
+        "method": "GET",
+        "headers": [],
+        "queryParams": [
+          {
+            "name": "page",
+            "value": "",
+            "enabled": false
+          }
+        ],
+        "pathParams": [],
+        "auth": {
+          "type": "bearer",
+          "credentials": {
+            "username": "",
+            "password": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGQ0YTQ3NzVjZTY3N2Y1NGExNDI5MzEiLCJpYXQiOjE3NTkxOTkwNTYsImV4cCI6MTc1OTI4NTQ1Nn0.tjoq30rFCBfKuZQRHweaGCQjunLWDQaQROLDdeOZKh8"
+          },
+          "target": "headers"
+        },
+        "body": {
+          "type": "none",
+          "file": {
+            "name": ""
+          },
+          "text": {
+            "value": "",
+            "format": "application/json"
+          },
+          "form": {
+            "isMultipart": false,
+            "fields": []
+          },
+          "graphql": {
+            "query": "",
+            "variables": ""
+          }
+        }
+      },
+      {
+        "name": "",
+        "url": "localhost:5500/api/v1/projects/68d5efbd0225b829ec9a07cb/tasks",
+        "method": "GET",
+        "headers": [],
+        "queryParams": [
+          {
+            "name": "page",
+            "value": "2",
+            "enabled": true
+          }
+        ],
+        "pathParams": [],
+        "auth": {
+          "type": "bearer",
+          "credentials": {
+            "username": "",
+            "password": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGQ0YTQ3NzVjZTY3N2Y1NGExNDI5MzEiLCJpYXQiOjE3NTkxOTkwNTYsImV4cCI6MTc1OTI4NTQ1Nn0.tjoq30rFCBfKuZQRHweaGCQjunLWDQaQROLDdeOZKh8"
+          },
+          "target": "headers"
+        },
+        "body": {
+          "type": "none",
+          "file": {
+            "name": ""
+          },
+          "text": {
+            "value": "",
+            "format": "application/json"
+          },
+          "form": {
+            "isMultipart": false,
+            "fields": []
+          },
+          "graphql": {
+            "query": "",
+            "variables": ""
+          }
+        }
+      },
+      {
+        "name": "",
+        "url": "localhost:5500/api/v1/projects/68d5efbd0225b829ec9a07cb/tasks",
+        "method": "GET",
+        "headers": [],
+        "queryParams": [
+          {
+            "name": "page",
+            "value": "1",
+            "enabled": true
+          },
+          {
+            "name": "status",
+            "value": "todo",
+            "enabled": true
+          }
+        ],
+        "pathParams": [],
+        "auth": {
+          "type": "bearer",
+          "credentials": {
+            "username": "",
+            "password": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGQ0YTQ3NzVjZTY3N2Y1NGExNDI5MzEiLCJpYXQiOjE3NTkxOTkwNTYsImV4cCI6MTc1OTI4NTQ1Nn0.tjoq30rFCBfKuZQRHweaGCQjunLWDQaQROLDdeOZKh8"
+          },
+          "target": "headers"
+        },
+        "body": {
+          "type": "none",
+          "file": {
+            "name": ""
+          },
+          "text": {
+            "value": "",
+            "format": "application/json"
+          },
+          "form": {
+            "isMultipart": false,
+            "fields": []
+          },
+          "graphql": {
+            "query": "",
+            "variables": ""
+          }
+        }
+      },
+      {
+        "name": "",
+        "url": "localhost:5500/api/v1/projects/68d5efbd0225b829ec9a07cb/tasks/68d93f53b719f26c6b62f15b",
+        "method": "PUT",
+        "headers": [],
+        "queryParams": [],
+        "pathParams": [],
+        "auth": {
+          "type": "bearer",
+          "credentials": {
+            "username": "",
+            "password": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGQ0YTQ3NzVjZTY3N2Y1NGExNDI5MzEiLCJpYXQiOjE3NTkxOTkwNTYsImV4cCI6MTc1OTI4NTQ1Nn0.tjoq30rFCBfKuZQRHweaGCQjunLWDQaQROLDdeOZKh8"
+          },
+          "target": "headers"
+        },
+        "body": {
+          "type": "text",
+          "file": {
+            "name": ""
+          },
+          "text": {
+            "value": "{\n  \"title\":\"Task 9 update test\",\n  \"description\":\"Task 9 update test ongoing\",\n  \"status\":\"in-progress\"\n}",
+            "format": "application/json"
+          },
+          "form": {
+            "isMultipart": false,
+            "fields": []
+          },
+          "graphql": {
+            "query": "",
+            "variables": ""
+          }
+        }
+      },
+      {
+        "name": "",
+        "url": "localhost:5500/api/v1/projects/68d5efbd0225b829ec9a07cb/tasks/68d93f25b719f26c6b62f147",
+        "method": "DELETE",
+        "headers": [],
+        "queryParams": [],
+        "pathParams": [],
+        "auth": {
+          "type": "bearer",
+          "credentials": {
+            "username": "",
+            "password": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGQ0YTQ3NzVjZTY3N2Y1NGExNDI5MzEiLCJpYXQiOjE3NTkxOTkwNTYsImV4cCI6MTc1OTI4NTQ1Nn0.tjoq30rFCBfKuZQRHweaGCQjunLWDQaQROLDdeOZKh8"
+          },
+          "target": "headers"
+        },
+        "body": {
+          "type": "none",
+          "file": {
+            "name": ""
+          },
+          "text": {
+            "value": "",
+            "format": "application/json"
+          },
+          "form": {
+            "isMultipart": false,
+            "fields": []
+          },
+          "graphql": {
+            "query": "",
+            "variables": ""
+          }
+        }
+      },
+      {
+        "name": "",
+        "url": "localhost:5500/api/v1/auth/register",
+        "method": "POST",
+        "headers": [],
+        "queryParams": [],
+        "pathParams": [],
+        "auth": {
+          "type": "inherited"
+        },
+        "body": {
+          "type": "text",
+          "file": {
+            "name": ""
+          },
+          "text": {
+            "value": "{\n  \"name\":\"New Userxyz\",\n\"email\":\"newuserxyz@example.com\",\n  \"password\":\"Newuser@12345\"\n  \n}",
+            "format": "application/json"
+          },
+          "form": {
+            "isMultipart": false,
+            "fields": []
+          },
+          "graphql": {
+            "query": "",
+            "variables": ""
+          }
+        }
+      }
+    ]
+  }
+}
