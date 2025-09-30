@@ -29,14 +29,15 @@ It allows users to perform full CRUD operations on both projects and tasks. Auth
                 npm run build && npm run start to make a build and run 
                       then visit  `http://localhost:3000`
 
-💡 Features 
-            🔐 User Registration & Login (JWT-based authentication)
-            📋 Dashboard to list all user-specific projects
-            🧩 Full CRUD functionality on:
-                Projects
-                Tasks (associated with specific projects)
-            ✅ Form validation using React Hook Form + Yup
-            🔧 TypeScript-based development for type safety
+#### 💡 Project Features
+        
+        🔐 User Registration & Login (JWT-based authentication)
+        📋 Dashboard to list all user-specific projects
+        🧩 Full CRUD functionality on:
+            Projects
+            Tasks (associated with specific projects)
+        ✅ Form validation using React Hook Form + Yup
+        🔧 TypeScript-based development for type safety
 
 
 ## ---------------------- 🚀 BACKEND ----------------------
