@@ -21,10 +21,14 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
   Grid,
   IconButton,
+  InputLabel,
   Menu,
   MenuItem,
+  Select,
+  SelectChangeEvent,
   TextField,
   Tooltip,
   Typography,
@@ -47,6 +51,7 @@ import * as yup from "yup";
 type ProjectFormData = {
   title: string;
   description: string;
+  status: 'active' | 'completed';
 };
 
 const projectSchema = yup
@@ -61,6 +66,10 @@ const projectSchema = yup
       .trim()
       .required("Project description is required")
       .max(100, "Description cannot exceed 100 characters"),
+      status: yup
+      .string()
+      .oneOf(['active', 'completed'], "Invalid status selected")
+      .required("Project status is required") as yup.Schema<ProjectFormData['status']>
   })
   .required();
 
@@ -90,6 +99,9 @@ const Dashboard = () => {
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [user, setUser] = useState<StoredUser | null>(null);
+  const [filterStatus, setFilterStatus] = useState<string>("all");
+
+
   useAuth(true);
 
   const {
@@ -103,6 +115,7 @@ const Dashboard = () => {
     defaultValues: {
       title: "",
       description: "",
+      status: "active",
     },
   });
 
@@ -111,7 +124,14 @@ const Dashboard = () => {
       try {
         setLoading(true);
         const response = await fetchProjects();
-        setProjects(response?.data);
+         if (filterStatus !== "all") {
+        const filteredProjects = response.data.filter(
+          (project: Project) => project?.status === filterStatus
+        );
+        setProjects(filteredProjects);
+      } else {
+        setProjects(response.data);
+      }
         toast.success(response?.message);
         const storedUser = localStorage.getItem("user");
         if (storedUser) {
@@ -126,7 +146,7 @@ const Dashboard = () => {
     };
 
     fetchData();
-  }, []);
+  }, [filterStatus]);
 
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -138,7 +158,7 @@ const Dashboard = () => {
   };
   const handleOpenCreate = () => {
     setIsEditing(false);
-    reset({ title: "", description: "" });
+    reset({ title: "", description: "", status: "active" });
     setCurrentProject(null);
     setOpen(true);
   };
@@ -146,7 +166,7 @@ const Dashboard = () => {
   const handleOpenEdit = (project: Project) => {
     setIsEditing(true);
     setCurrentProject(project);
-    reset({ title: project.title, description: project.description });
+    reset({ title: project.title, description: project.description, status: (project.status as ProjectFormData['status']) || 'active' }); 
     setOpen(true);
   };
 
@@ -176,15 +196,19 @@ const Dashboard = () => {
     router.push(`/project/${projectId}`);
   };
 
+   const handleFilterChange = (event:SelectChangeEvent) => {
+    setFilterStatus(event.target.value);
+  };
+
   const onSubmit = async (data: ProjectFormData) => {
     try {
       if (isEditing) {
         if (!currentProject) return;
         const res = await updateProject(currentProject._id, data);
-        toast.success(res?.status);
+        toast.success(res?.message);
       } else {
         const res = await createProject(data);
-        toast.success(res?.status);
+        toast.success(res?.message);
       }
       const response = await fetchProjects();
       setProjects(response?.data);
@@ -244,6 +268,17 @@ const Dashboard = () => {
             justifyContent: isMobile ? "space-between" : "flex-start",
           }}
         >
+         <FormControl  sx={{ minWidth: 150, borderRadius:2, backgroundColor:'bisque'}}>
+          <Select
+            value={filterStatus}
+            onChange={handleFilterChange}
+            fullWidth
+          >
+            <MenuItem value="all">All Projects</MenuItem>
+            <MenuItem value="active">Active</MenuItem>
+            <MenuItem value="completed">Completed</MenuItem>
+          </Select>
+        </FormControl>
           <Button
             variant="contained"
             color="primary"
@@ -458,10 +493,10 @@ const Dashboard = () => {
               mt: 5,
             }}
           >
-            <Typography variant="h5" color="text.secondary">
+            <Typography variant="h5" color="aliceblue">
               👋 It's quiet in here!
             </Typography>
-            <Typography color="text.secondary" sx={{ mt: 1, mb: 3 }}>
+            <Typography color="aliceblue" sx={{ mt: 1, mb: 3 }}>
               Click 'Create New Project' to get started.
             </Typography>
             <Button
@@ -519,6 +554,28 @@ const Dashboard = () => {
                   helperText={errors.description?.message || " "}
                   sx={{ mb: 2 }}
                 />
+              )}
+            />
+            <Controller
+              name="status"
+              control={control}
+              render={({ field }) => (
+                <FormControl fullWidth error={!!errors.status} sx={{ mb: 2 }}>
+                  <InputLabel id="project-status-label">Status</InputLabel>
+                  <Select
+                    {...field}
+                    labelId="project-status-label"
+                    label="Status"
+                    value={field.value} 
+                    onChange={field.onChange} 
+                  >
+                    <MenuItem value={'active'}>Active</MenuItem>
+                    <MenuItem value={'completed'}>Completed</MenuItem>
+                  </Select>
+                  <Typography variant="caption" color="error" sx={{ ml: 2, mt: 0.5 }}>
+                    {errors.status?.message}
+                  </Typography>
+                </FormControl>
               )}
             />
           </DialogContent>

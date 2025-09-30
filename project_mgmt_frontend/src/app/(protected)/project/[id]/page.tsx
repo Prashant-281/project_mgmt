@@ -14,8 +14,13 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
   Grid,
   IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
   TextField,
   Tooltip,
   Typography,
@@ -40,7 +45,10 @@ type TaskFormData = {
   title: string;
   description: string;
   dueDate: string;
+  status: TaskStatus;
 };
+ 
+type TaskStatus = 'todo' | 'in-progress' | 'done';
 
 const taskSchema = yup
   .object({
@@ -64,8 +72,25 @@ const taskSchema = yup
         const selectedDate = new Date(value);
         return selectedDate >= today;
       }),
+      status: yup
+      .string()
+      .oneOf(['todo', 'in-progress', 'done'], "Invalid status selected")
+      .required("Task status is required") as yup.Schema<TaskStatus>,
   })
   .required();
+
+  const getStatusColor = (status: string) => {
+    switch ((status || '').toLowerCase()) {
+        case 'todo':
+            return 'error';
+        case 'in-progress':
+            return 'warning';
+        case 'done':
+            return 'success';
+        default:
+            return 'default';
+    }
+};
 
 const Tasks = () => {
   const router = useRouter();
@@ -84,6 +109,7 @@ const Tasks = () => {
   const [currentTask, setCurrentTask] = useState<Task | null>(null);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [filterStatus, setFilterStatus] = useState<string>('all')
 
   useAuth(true);
 
@@ -100,6 +126,7 @@ const Tasks = () => {
       title: "",
       description: "",
       dueDate: "",
+      status: "todo"
     },
   });
 
@@ -107,7 +134,7 @@ const Tasks = () => {
     async (currentPage: number) => {
       try {
         setLoading(true);
-        const response = await fetchTasks(projectId, currentPage);
+        const response = await fetchTasks(projectId, currentPage, filterStatus);
         setTasks(response?.data || []);
         toast.success(response?.message);
         setTotalPages(response?.totalPages || 1);
@@ -124,18 +151,18 @@ const Tasks = () => {
         setLoading(false);
       }
     },
-    [projectId]
+    [projectId, filterStatus]
   );
 
   useEffect(() => {
     refetchTasks(page);
-  }, [projectId, page, refetchTasks]);
+  }, [projectId, page, refetchTasks, filterStatus]);
 
   const handleOpenCreate = () => {
     setIsEditing(false);
     setCurrentTask(null);
     const today = new Date().toISOString().split("T")[0];
-    reset({ title: "", description: "", dueDate: today });
+    reset({ title: "", description: "", dueDate: today, status: "todo" }); 
     setOpen(true);
   };
 
@@ -148,6 +175,7 @@ const Tasks = () => {
     setValue("title", task.title, { shouldValidate: true });
     setValue("description", task.description, { shouldValidate: true });
     setValue("dueDate", formattedDueDate, { shouldValidate: true });
+    setValue("status", (task.status as TaskFormData['status']) || "todo", { shouldValidate: true }); 
     setOpen(true);
   };
 
@@ -166,9 +194,13 @@ const Tasks = () => {
     setDeleteOpen(false);
     setCurrentTask(null);
   };
+  const handleFilterChange = (event:SelectChangeEvent) => {
+      setFilterStatus(event.target.value);
+    };
 
   const onSubmit = async (data: TaskFormData) => {
     try {
+      handleClose();
       if (isEditing && currentTask) {
         const res = await updateTask(projectId, currentTask._id, data);
         toast.success(res?.message);
@@ -179,7 +211,7 @@ const Tasks = () => {
       }
 
       await refetchTasks(isEditing ? page : 1);
-      handleClose();
+      
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -248,6 +280,18 @@ const Tasks = () => {
             justifyContent: isMobile ? "space-between" : "flex-start",
           }}
         >
+          <FormControl  sx={{ minWidth: 150, borderRadius:2, backgroundColor:'ivory'}}>
+                    <Select
+                      value={filterStatus}
+                      onChange={handleFilterChange}
+                      fullWidth
+                    >
+                      <MenuItem value="all">All Tasks</MenuItem>
+                      <MenuItem value="todo">Todo</MenuItem>
+                      <MenuItem value="in-progress">In progress</MenuItem>
+                      <MenuItem value="done">Done</MenuItem>
+                    </Select>
+                  </FormControl>
           <Button
             variant="contained"
             color="primary"
@@ -337,7 +381,7 @@ const Tasks = () => {
                     </Typography>
                     <Chip
                       label={task?.status}
-                      color='default'
+                      color={getStatusColor(task?.status)||'default'}
                       size="small"
                       sx={{
                         mb: 1,
@@ -510,6 +554,30 @@ const Tasks = () => {
                 />
               )}
             />
+            <Controller
+              name="status"
+              control={control}
+              render={({ field }) => (
+                <FormControl fullWidth error={!!errors.status} sx={{ mb: 2 }}>
+                  <InputLabel id="task-status-label">Status</InputLabel>
+                  <Select
+                    {...field}
+                    labelId="task-status-label"
+                    label="Status"
+                    value={field.value}
+                    onChange={field.onChange}
+                  >
+                    <MenuItem value={'todo'}>To Do</MenuItem>
+                    <MenuItem value={'in-progress'}>In Progress</MenuItem>
+                    <MenuItem value={'done'}>Done</MenuItem>
+                  </Select>
+                  <Typography variant="caption" color="error" sx={{ ml: 2, mt: 0.5 }}>
+                    {errors.status?.message}
+                  </Typography>
+                </FormControl>
+              )}
+            />
+
           </DialogContent>
           <DialogActions sx={{ p: 2 }}>
             <Button onClick={handleClose} color="inherit">

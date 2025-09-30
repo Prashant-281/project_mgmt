@@ -80,9 +80,10 @@ export const deleteProject = async (projectId: string) => {
   }
 };
 
- export const fetchTasks = async (projectId: string, page:number)  => {
+ export const fetchTasks = async (projectId: string, page:number, filterStatus:string)  => {
   try {
-    const response =  await api.get(`/projects/${projectId}/tasks?page=${page}`);
+    const statusQuery = filterStatus && filterStatus !== 'all' ? `&status=${filterStatus}` : '';
+    const response =  await api.get(`/projects/${projectId}/tasks?page=${page}&status=${statusQuery}`);
     return response?.data;
   } catch (error: unknown) {
     throw new Error(extractErrorMessage(error, "Failed to fetch tasks"));

@@ -23,7 +23,7 @@ export const getAllProjects = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user._id;
     const projects = await Project.find({ user: userId }).sort('-createdAt');
-    return res.status(200).json({ status: 'success', data: projects, message: 'Project fetched successfully ' });
+    return res.status(200).json({ status: 'success', data: projects, message: 'Projects fetched successfully ' });
   } catch (err: any) {
     return res.status(500).json({ message: 'Server error', error: err.message });
   }
